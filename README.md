@@ -31,24 +31,6 @@
     main activity, `-k` is the package name and `-t` is the preferred android version. (API level 19 is 4.4.2). For more info
     on the command check its help.
 
-<!--
-   -5. Now we have to do some housekeeping. First of all we have a `Main.java` file in our `src` folder. We are working with Scala
-   -    so we don't really need that. Also the folder structure is not quite what we want. By default we get `src/package/Main.java`
-   -    but in case of scala projects we need something more complicated. My usual folder layout is:
-   -    ```
-   -    src
-   -    |-main
-   -      |-resources
-   -      |-scala
-   -      |-java (if there are java sources)
-   -    |-test
-   -      |-resources
-   -      |-scala
-   -      |-java
-   -    ```
-   -    So let's do that instead.
-   -
-   -->
 6. Now we have to set up our `android-sdk-plugin` project properly. We can do that by making our config object extend
     `android.AutoBuild` but we will do some fine tuning with our config. See this in `project/AndroidProject.scala`.
 
@@ -59,14 +41,29 @@
 Scala is really not a language we want to use only a text editor for, so we will set up IntelliJ IDEA to work on our project.
 You can go grab the community edition on their website or if you are a student you can get a non-commercial license
 for the ultimate edition. We will also need the Scala and SBT plugins.
-After this we can import (use auto import) our project as an SBT project. (I had to still add `android.jar` as a library because IDEA did not
-pick it up for some reason.)
+After this we can import (use auto import) our project as an SBT project.
 File -> Import Project... -> select project root folder-> OK -> Import project from external model -> SBT Project -> 
 Check "Use auto-import" & for Project SDK, select an Android API platform -> Finish. 
 Choose to configure the android project when IDEA asks.
 
-<!--
-   -http://www.scala-sbt.org/download.html
-   -https://github.com/pfn/android-sdk-plugin
-   -->
+# Running the project
+
+For compiling I recommend running a separate `sbt` process with `sbt ~compile`. This will automatically recompile the
+Scala source every time the code changes. This is somewhat faster than invoking `sbt compile` manually every time because
+you don't have to restart the JVM every time and `sbt` even keeps `scalac` open so you don't have to spin that up either.
+
+The best way for actually running your project is obviously to have a physical device and run on that. This will be much faster than any emulator, but obviously you can use the emulator that ships with ADT or Genymotion for better performance.
+Just invoke the `android:run` command and see your app show up on the screen of your device.
+
+# Libraries
+
+There is a very comprehensive Scala library for Android which gives us very nice abstractions over what the Android platform
+provides in Java. Obviously we don't have to use any library at all as Scala has superb Java interoperation, but it's much
+nicer to write idiomatic Scala code than one with a lot of interop. Scalod gives us many implicit conversions for ease of use, a bunch of traits that can come in handy when dealing with activities and a lot of typesafe extensions for what the
+Android platform provides (we need a lot less casting than we would in Java).
+
+# References
+* [SBT](http://www.scala-sbt.org/download.html)
+* [Android SDK plugin](https://github.com/pfn/android-sdk-plugin)
+* [Scaloid](https://github.com/pocorall/scaloid)
 
